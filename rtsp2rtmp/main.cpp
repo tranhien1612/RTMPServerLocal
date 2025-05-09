@@ -10,24 +10,6 @@
 #define UINT64_C(c) (c ## ULL)
 #endif
 
-
-struct Exception : std::exception{};
-template<typename T>
-T* chk(T* pointer){
-    if(pointer == nullptr){
-        throw Exception();
-    }
-    return pointer;
-}
-
-template<typename T>
-void delptr(T* pointer){
-    if(pointer!= nullptr){
-        delete pointer;
-        pointer = nullptr;
-    }
-}
-
 GMainLoop* _loop;
 GstBus* _bus;
 GstElement* _pipeline;
