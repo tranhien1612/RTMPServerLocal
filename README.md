@@ -39,7 +39,9 @@
   gst-launch-1.0 videotestsrc is-live=true ! videoconvert ! x264enc ! flvmux streamable=true name=mux ! rtmpsink location="rtmp://127.0.0.1/live/stream" audiotestsrc is-live=true ! audioconvert ! audioresample ! audio/x-raw,rate=48000 ! voaacenc bitrate=96000 ! audio/mpeg ! aacparse ! audio/mpeg, mpegversion=4 ! mux.
   
   # rtspsrc
-  gst-launch-1.0 rtspsrc location=rtsp://x.x.x.x latency=0 ! rtph264depay ! h264parse ! flvmux streamable=true ! queue ! rtmpsink location="rtmp://127.0.0.1/live/stream"
+  gst-launch-1.0 rtspsrc location=rtsp://x.x.x.x latency=0 ! rtph264depay ! h264parse ! queue ! flvmux streamable=true ! rtmpsink location="rtmp://127.0.0.1/live/stream"
+  # or
+  gst-launch-1.0 rtspsrc location=rtsp://x.x.x.x latency=0 ! decodebin3 ! videoconvert ! x264enc bitrate=4000 tune=zerolatency ! video/x-h264 ! h264parse ! queue ! flvmux streamable=true ! rtmpsink location="rtmp://127.0.0.1/live/stream"
 
 ```
 
