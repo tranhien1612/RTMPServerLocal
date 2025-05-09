@@ -19,9 +19,14 @@
 ## Server test
 ### Using ffmpeg:
 ```
-  ffmpeg.exe -re -i test.h264 -f flv rtmp://127.0.0.1/live/stream
-  
-  ffplay.exe rtmp://127.0.0.1:1935/live/stream
+  # stream video with input is rtspsrc
+  ffmpeg -rtsp_transport tcp -i "rtsp://127.0.0.1:8554/test" -f flv -r 25 -an rtmp://127.0.0.1/live/stream
+
+  # stream video with input is video file
+  ffmpeg -re -i test.h264 -f flv rtmp://127.0.0.1/live/stream
+
+  # display
+  ffplay rtmp://127.0.0.1:1935/live/stream
 ```
 
 
