@@ -1,33 +1,40 @@
-﻿# rtmp
+# RTMP Server Local
 
-目前情况
--
-* 支持 Windows 和 Linux 平台
-* 支持 RTMP, HTTP-FLV 协议
-* 支持 H.264 和 AAC 转发
-* 支持 GOP 缓存
-* 支持 RTMP 推流
+## Current situation
+* Support Windows and Linux platforms
+* Support RTMP, HTTP-FLV protocols
+* Support H.264 and AAC forwarding
+* Support GOP cache
+* Support RTMP streaming
 
-编译运行
--
-* make
-* ./rtmp_server
+## Compile and run
+```
+  # compile
+  make
+  
+  # run
+  ./rtmp_server
+```
 
-推流器测试
--
-* [DesktopSharing](https://github.com/PHZ76/DesktopSharing)
+## Server test
+### Using ffmpeg:
+```
+  ffmpeg.exe -re -i test.h264 -f flv rtmp://127.0.0.1/live/stream
+  
+  ffplay.exe rtmp://127.0.0.1:1935/live/stream
+```
 
-服务器测试
--
-* ffmpeg.exe -re -i test.h264 -f flv rtmp://127.0.0.1/live/stream
-* ffplay.exe rtmp://127.0.0.1:1935/live/stream
-* ffplay.exe http://127.0.0.1:8000/live/stream.flv
 
-后续计划
--
-* HLS支持
-* 性能优化
+### Using gstreamer:
+```
+  # only videotestsrc
+  gst-launch-1.0 videotestsrc is-live=true ! videoconvert ! x264enc ! flvmux streamable=true ! rtmpsink location="rtmp://127.0.0.1/live/stream"
+  
+  # videotestsrc + audiotestsrc
+  gst-launch-1.0 videotestsrc is-live=true ! videoconvert ! x264enc ! flvmux streamable=true name=mux ! rtmpsink location="rtmp://127.0.0.1/live/stream" audiotestsrc is-live=true ! audioconvert ! audioresample ! audio/x-raw,rate=48000 ! voaacenc bitrate=96000 ! audio/mpeg ! aacparse ! audio/mpeg, mpegversion=4 ! mux.
+  
+  # rtspsrc
+  gst-launch-1.0 rtspsrc location=rtsp://x.x.x.x latency=0 ! rtph264depay ! h264parse ! flvmux streamable=true ! queue ! rtmpsink location="rtmp://127.0.0.1/live/stream"
 
-联系方式
--
-* penghaoze76@qq.com
+```
+
